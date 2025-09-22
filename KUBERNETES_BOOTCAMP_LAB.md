@@ -1,9 +1,11 @@
 # Kubernetes Observability Bootcamp - Practical Lab
 
 ## 🎯 **Lab Objective**
+
 Deploy a complete microservices observability stack on Kubernetes using Minikube. Students must successfully deploy and configure all components to pass the assessment.
 
 ## 📋 **Assessment Criteria**
+
 - [ ] Minikube cluster running
 - [ ] All application pods healthy
 - [ ] Grafana accessible with dashboards showing data
@@ -15,6 +17,7 @@ Deploy a complete microservices observability stack on Kubernetes using Minikube
 ## 🛠 **Prerequisites**
 
 ### Required Tools
+
 ```bash
 # Install required tools (macOS)
 brew install minikube kubectl docker helm
@@ -27,6 +30,7 @@ helm version
 ```
 
 ### System Requirements
+
 - 8GB RAM minimum
 - 4 CPU cores
 - 20GB free disk space
@@ -38,7 +42,7 @@ helm version
 
 ```bash
 # Start Minikube with sufficient resources
-minikube start --memory=6144 --cpus=4 --disk-size=20g
+minikube start --memory=6144 --cpus=2 --disk-size=20g
 
 # Enable required addons
 minikube addons enable ingress
@@ -52,6 +56,7 @@ kubectl get nodes
 ### Step 2: Create Kubernetes Manifests
 
 Create the following directory structure:
+
 ```
 k8s/
 ├── namespace.yaml
@@ -62,6 +67,7 @@ k8s/
 ```
 
 #### 2.1 Create Namespace
+
 ```yaml
 # k8s/namespace.yaml
 apiVersion: v1
@@ -73,6 +79,7 @@ metadata:
 ```
 
 #### 2.2 PostgreSQL Database
+
 ```yaml
 # k8s/deployments/postgres.yaml
 apiVersion: apps/v1
@@ -123,6 +130,7 @@ spec:
 ```
 
 #### 2.3 Redis Cache
+
 ```yaml
 # k8s/deployments/redis.yaml
 apiVersion: apps/v1
@@ -162,6 +170,7 @@ spec:
 ### Step 3: Deploy Observability Stack
 
 #### 3.1 Mimir (Metrics Storage)
+
 ```yaml
 # k8s/configmaps/mimir-config.yaml
 apiVersion: v1
@@ -249,6 +258,7 @@ spec:
 ```
 
 #### 3.2 Loki (Log Aggregation)
+
 ```yaml
 # k8s/deployments/loki.yaml
 apiVersion: v1
@@ -331,6 +341,7 @@ spec:
 ### Step 4: Deploy Application Services
 
 #### 4.1 Backend Service
+
 ```yaml
 # k8s/deployments/backend.yaml
 apiVersion: apps/v1
@@ -436,6 +447,7 @@ kubectl port-forward -n shopmicro svc/backend 3001:3001 &
 ## 🧪 **Assessment Tests**
 
 ### Test 1: Cluster Health
+
 ```bash
 # All pods should be Running
 kubectl get pods -n shopmicro
@@ -443,6 +455,7 @@ kubectl get pods -n shopmicro
 ```
 
 ### Test 2: Service Connectivity
+
 ```bash
 # Test backend health
 curl http://localhost:3001/health
@@ -454,6 +467,7 @@ curl http://localhost:8080
 ```
 
 ### Test 3: Metrics Collection
+
 ```bash
 # Check backend metrics
 curl http://localhost:3001/metrics | grep shopmicro_backend
@@ -461,6 +475,7 @@ curl http://localhost:3001/metrics | grep shopmicro_backend
 ```
 
 ### Test 4: Grafana Dashboards
+
 ```bash
 # Access Grafana
 open http://localhost:3000
@@ -471,6 +486,7 @@ open http://localhost:3000
 ## 🎯 **Success Criteria**
 
 Students pass when:
+
 - [ ] All pods show `Running` status
 - [ ] All services respond to health checks
 - [ ] Grafana shows metrics data in dashboards
@@ -483,24 +499,28 @@ Students pass when:
 ### Common Issues
 
 **Pods stuck in Pending:**
+
 ```bash
 kubectl describe pod <pod-name> -n shopmicro
 # Check resource constraints and node capacity
 ```
 
 **Image pull errors:**
+
 ```bash
 # Ensure images are loaded in Minikube
 minikube image ls | grep shopmicro
 ```
 
 **Service connectivity issues:**
+
 ```bash
 # Check service endpoints
 kubectl get endpoints -n shopmicro
 ```
 
 ### Debug Commands
+
 ```bash
 # View pod logs
 kubectl logs -f <pod-name> -n shopmicro
@@ -515,6 +535,7 @@ kubectl top pods -n shopmicro
 ## 📚 **Learning Objectives**
 
 By completing this lab, students will:
+
 1. Deploy microservices on Kubernetes
 2. Configure observability stack (metrics, logs, traces)
 3. Understand Kubernetes networking and services
@@ -524,53 +545,69 @@ By completing this lab, students will:
 ## 🎮 **Easter Eggs & Hidden Challenges**
 
 ### 🥚 **Easter Egg #1: The Secret Endpoint**
+
 There's a hidden endpoint in the backend service that reveals a special message. Find it by exploring the API!
+
 - **Hint**: It's related to the bootcamp theme
 - **Reward**: Special badge in your assessment
 
 ### 🥚 **Easter Egg #2: The Konami Code**
+
 The frontend has a hidden feature activated by a famous gaming sequence. Try it!
+
 - **Hint**: ↑↑↓↓←→←→BA
 - **Reward**: Unlock developer mode with extra metrics
 
 ### 🥚 **Easter Egg #3: The Metrics Detective**
+
 Find the metric that tracks "coffee consumption" in the ML service
+
 - **Hint**: Check the custom business metrics
 - **Reward**: Coffee emoji appears in Grafana dashboard title
 
 ### 🥚 **Easter Egg #4: The Pod Whisperer**
+
 Name one of your pods with a specific pattern to unlock a special log message
+
 - **Hint**: Use a famous Kubernetes mascot name
 - **Reward**: ASCII art appears in pod logs
 
 ### 🥚 **Easter Egg #5: The Time Traveler**
+
 Set a specific annotation on your namespace to activate retro mode
+
 - **Hint**: `retro.mode: "1985"`
 - **Reward**: All timestamps display in retro format
 
 ## 🏆 **Achievement System**
 
 ### 🥇 **Deployment Master**
+
 - Deploy all services without any restarts
 - All pods reach Running state within 5 minutes
 
 ### 🥈 **Troubleshoot Hero**
+
 - Successfully debug and fix at least 2 common issues
 - Document your solutions in comments
 
 ### 🥉 **Metrics Guru**
+
 - Create a custom dashboard in Grafana
 - Add at least 3 different visualization types
 
 ### 🎯 **Easter Egg Hunter**
+
 - Find all 5 hidden easter eggs
 - Screenshot each discovery for proof
 
 ### 🚀 **Performance Optimizer**
+
 - Configure resource limits that keep CPU usage under 50%
 - Achieve sub-100ms response times on health checks
 
 ### 🔍 **Security Sentinel**
+
 - Add security contexts to all deployments
 - Implement network policies (bonus challenge)
 

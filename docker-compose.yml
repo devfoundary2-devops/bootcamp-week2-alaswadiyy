@@ -54,9 +54,10 @@ services:
       - LOG_LEVEL=info
     ports:
       - "3001:3001"
-    volumes:
-      - ./backend:/usr/src/app
-      - backend_node_modules:/usr/src/app/node_modules
+    # Use the image contents (including installed node_modules) instead of mounting the host
+    # This ensures the node_modules installed during image build are available inside the container
+    # Remove or revert this change only if you explicitly populate the named volume with dependencies
+    # or run `docker compose run --rm backend npm ci` to populate `backend_node_modules`.
     depends_on:
       postgres:
         condition: service_healthy
@@ -175,7 +176,7 @@ services:
   loki:
     image: grafana/loki:latest
     container_name: shopmicro-loki
-    user: "0:0"  # Run as root to avoid permission issues
+    user: "0:0" # Run as root to avoid permission issues
     ports:
       - "3100:3100"
     command:
@@ -190,11 +191,11 @@ services:
   tempo:
     image: grafana/tempo:latest
     container_name: shopmicro-tempo
-    user: "0:0"  # Run as root to avoid permission issues
+    user: "0:0" # Run as root to avoid permission issues
     ports:
       - "3200:3200"
-      - "4317:4317"  # OTLP gRPC receiver
-      - "4318:4318"  # OTLP HTTP receiver
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
     command:
       - -config.file=/etc/tempo/tempo.yaml
     volumes:
@@ -208,7 +209,7 @@ services:
     image: grafana/alloy:latest
     container_name: shopmicro-alloy
     ports:
-      - "12345:12345"  # Alloy UI
+      - "12345:12345" # Alloy UI
     command:
       - run
       - /etc/alloy/config.alloy

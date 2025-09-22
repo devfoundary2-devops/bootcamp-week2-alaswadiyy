@@ -42,7 +42,7 @@ helm version
 
 ```bash
 # Start Minikube with sufficient resources
-minikube start --memory=6144 --cpus=4 --disk-size=20g
+minikube start --memory=6144 --cpus=2 --disk-size=20g
 
 # Enable required addons
 minikube addons enable ingress

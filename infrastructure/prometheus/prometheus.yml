@@ -161,14 +161,14 @@ scrape_configs:
         target_label: kubernetes_name
 
 # Storage configuration
-storage:
-  tsdb:
-    path: /prometheus/
-    retention.time: 30d
-    retention.size: 10GB
+# Note: Prometheus does not accept tsdb storage settings in prometheus.yml; configure them via CLI flags.
+# Example flags to set the data directory and retention:
+#   --storage.tsdb.path=/prometheus
+#   --storage.tsdb.retention.time=30d
+#   --storage.tsdb.retention.size=10GB
 
 # Enable remote write (for long-term storage)
-remote_write:
+#remote_write:
   # Example: Write to external time series database
   # - url: "https://your-remote-storage/api/v1/write"
   #   basic_auth:
